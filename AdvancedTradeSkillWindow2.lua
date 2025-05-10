@@ -609,7 +609,7 @@ local function GetSpellNum(Name)
 		I = I + 1
 		SName = GetSpellName(I, BOOKTYPE_SPELL)
 		
-		if SName and string.find(SName, Name) then
+		if SName and Name and string.find(SName, Name) then
 			return I
 		end
 	until not SName
@@ -3409,6 +3409,36 @@ function ATSW_Sort(Table, Size, SortingFunction)
 	Sort(Table, 1, Size, SortingFunction)
 end
 
+ATSW_Gemstone_Info = {
+	["Arcane Emerald Gemstone"] = "5 SP Dam",
+	["Azerothian Ruby Gemstone"]    = "6 Str",
+	["Beautiful Diamond Gemstone"]  = "12 Heal",
+	["Brilliant Opal Gemstone"] = "6 Agi", 
+	["Burning Star Gemstone"]   = "5 Str",
+	["Dreary Opal Gemstone"]    = "8 Sha Res", 
+	["Elegant Emerald Gemstone"]    = "9 Nat Res",
+	["Enchanted Emerald Gemstone"]  = "9 Nat Dmg",
+	["Flawless Black Gemstone"] = "3 All Res",
+	["Gleaming Jade Gemstone"]  = "7 Heal",
+	["Glittering Sapphire Gemstone"]    = "9 Fro Dmg",
+	["Gloomy Diamond Gemstone"] = "8 Fire Res", 
+	["Glowing Ruby Gemstone"]   = "1 Vamp", 
+	["Gorgeous Mountain Gemstone"]  = "1% Block",
+	["Graceful Agate Gemstone"] = "6 SPen",
+	["Illuminated Gemstone"]    = "4 Spirit", 
+    ["Pure Shining Moonstone"]  = "6 Arc Dmg",
+	["Pristine Crystal Gemstone"]   = "3 Sta",
+	["Radiant Ember Gemstone"]  = "6 Fire Dmg",
+	["Resilient Arcane Gemstone"]   = "40 Armor",
+	["Resurged Topaz Gemstone"] = "2 MP5",   
+	["Sharpened Citrine Gemstone"]  = "4 Agi",
+	["Shimmering Aqua Gemstone"]    = "4 Int",
+	["Shining Sapphire Gemstone"]   = "6 Int",
+	["Stunning Imperial Gemstone"]  = "3 Stats",
+	["Tempered Azerothian Gemstone"]    = "6 Stamina",
+	["Unstable Arcane Gemstone"]    = "8 Arc Res",
+}
+
 function ATSW_UpdateRecipes()
 	local ScrollOffset 				= ScrollOffset() / ATSW_TRADESKILL_HEIGHT
 	local TextureWidth				= ATSWRecipe1Texture:GetWidth()
@@ -3420,7 +3450,7 @@ function ATSW_UpdateRecipes()
 		
 		local Index 					= I + ScrollOffset
 		local Exist 						= Index <= RecipesSortedSize()
-		local R, Possible, Text
+		local R, Possible, Text, patchedText
 		
 		SetVisible(Button, false) -- Needed for tooltip update if scrolled
 		SetVisible(Button, Exist)
@@ -3489,13 +3519,26 @@ function ATSW_UpdateRecipes()
 			else
 				TP = ""
 			end
+
+			patchedText = Text
+			local Geminfo = getglobal("ATSWRecipe" .. I .. "Gem")
+			local GemText = ATSW_Gemstone_Info[Text]
+			if GemText then
+				patchedText = Text .. " " .. WHITE .. "("..ATSW_Gemstone_Info[Text]..")"
+				-- Geminfo:SetPoint(point, relativeTo:GetName(), relativePoint, XOffset, yOfs)
+				-- Geminfo:SetWidth(30)
+				-- Geminfo:SetText(GemText)
+				-- SetVisible(Geminfo, true)
+			else
+				-- SetVisible(Geminfo, false)
+			end
 			
 			ButtonText:		SetWidth			(0)
 			ButtonSubText:	SetText				(TP)
 			ButtonTexture:	SetTexture		(R.Texture)
 			ButtonTexture:	SetTexCoord		(0+BorderSize, 1-BorderSize, 0+BorderSize, 1-BorderSize)
 			QualityTexture:	SetVertexColor	(cR, cG, cB)
-			Button:				SetText				(Text .. (ConvertCooldown(R.Cooldown) or ""))
+			Button:				SetText				(patchedText .. (ConvertCooldown(R.Cooldown) or ""))
 			Button:				SetTextColor		(TypeColor.R, TypeColor.G, TypeColor.B)
 			Button:				SetPoint			(point, relativeTo:GetName(), relativePoint, Button.XOffset + XOffset, yOfs)
 			Button:				SetWidth			(math.min(Button:GetTextWidth() + TextureWidth + TextureLeft, ButtonWidth - XOffset))
@@ -3517,7 +3560,7 @@ function ATSW_UpdateRecipes()
 		Button.Link			= R and R.Link
 		Button.Position		= R and R.Position
 		Button.Possible 		= Possible
-		Button.Text			= Text
+		Button.Text			= patchedText
 	end
 	
 	ATSW_SetHighlight(RecipeSelected())

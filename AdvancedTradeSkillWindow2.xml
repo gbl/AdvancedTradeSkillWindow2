@@ -81,13 +81,24 @@
 				</Anchor>
 			</Anchors>
 		</DisabledTexture>
-		<ButtonText name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
-			<Anchors>
-				<Anchor point="LEFT" relativeTo="$parentHighlight" relativePoint="RIGHT">
-					<Offset x="2" y="0"/>
-				</Anchor>
-			</Anchors>
-		</ButtonText>
+		<!-- <Frames> -->
+			<!--
+			<Button name="$parentGem"  inherits="GameFontNormal" justifyH="LEFT">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentHighlight" relativePoint="RIGHT">
+						<Offset x="2" y="0"/>
+					</Anchor>
+				</Anchors>
+			</Button>
+			-->
+			<ButtonText name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentHighlight" relativePoint="RIGHT">
+						<Offset x="2" y="0"/>
+					</Anchor>
+				</Anchors>
+			</ButtonText>
+		<!-- </Frames> -->
 		<NormalFont inherits="GameFontNormal" justifyH="LEFT"/>
 		<HighlightFont inherits="GameFontHighlight" justifyH="LEFT"/>
 		<DisabledFont inherits="GameFontDisable" justifyH="LEFT"/>
